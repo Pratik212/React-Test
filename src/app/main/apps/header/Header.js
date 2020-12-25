@@ -1,16 +1,16 @@
 import React from "react";
-import logo from "../../../../img/logo-small-with-name.png";
+import logo from "../../../../img/nature.jpg";
 
 function Header() {
     return (
         <>
             <div className="justify-content-center">
-                <nav className="navbar navbar-light" style={{backgroundColor: '#31B0D5'}}>
+                <nav className="navbar navbar-light" style={{backgroundColor: '#324AB3'}}>
                     <a className="navbar-brand" href="#">
                         <img
                             src={logo}
-                            width= "120"
-                            height="30"
+                            width= "100"
+                            height="50"
                             className="d-inline-block align-top"
                             alt=""
                             loading="lazy"

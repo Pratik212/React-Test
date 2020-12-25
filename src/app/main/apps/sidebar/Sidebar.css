@@ -1,0 +1,109 @@
+.navbar {
+    background-color: #ffffff;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.1px solid #EEEEEE;
+}
+
+.menu-bars {
+    margin-left: 2rem;
+    font-size: 2rem;
+    background: none;
+}
+
+.nav-menu {
+    background-color: #DFE2EF ;
+    width: 315px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    transition: 850ms;
+    /*margin-left:1px;*/
+    height:87vh;
+    margin-right: 10px;
+}
+
+/*.nav-menu.active {*/
+/*    left: 0;*/
+/*    transition: 350ms;*/
+/*}*/
+
+.nav-text {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 8px 0px 8px 16px;
+    list-style: none;
+    height: 60px;
+}
+
+.nav-text a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    width: 95%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-radius: 4px;
+}
+.nav-text a svg {
+    color: #ffffff;
+}
+
+.nav-text a:hover {
+    background-position: right;
+    color: black;
+    background-color:#C7C9D1;
+}
+
+.nav-menu-items {
+    width: 100%;
+}
+
+.navbar-toggle {
+    background-color: #ffffff;
+    width: 95%;
+    height: 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+span {
+    margin-left: 16px;
+}
+
+.app-logo {
+    width: 230px;
+    height: 35px;
+    margin-left: 20px;
+}
+
+.hide-login-bar {
+    display: inline;
+}
+
+@media screen and (max-width: 510px){
+    .app-logo{
+        width: 130px;
+        height: 35px;
+        margin-left: 20px;
+    }
+}
+@media screen and (max-width: 430px){
+    .hide-login-bar {
+        height: 0px;
+        width: 0px;
+        overflow: hidden;
+        display: none;
+    }
+}
+
+.active{
+    background-color: #C7C9D1;
+    font-weight:bold;
+}

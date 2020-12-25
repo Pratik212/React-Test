@@ -1,24 +1,22 @@
 import "./App.css";
 import React from "react";
-import Header from "./app/main/apps/header/Header";
-import Content from "./app/main/apps/content/Content";
+// import Header from "./app/main/apps/header/Header";
+// import Content from "./app/main/apps/content/Content";
+// import Sidebar from "./app/main/apps/sidebar/Sidebar";
 import {BrowserRouter} from "react-router-dom";
+import Content from "./app/main/apps/content/Content";
+import Sidebar from "./app/main/apps/sidebar/Sidebar";
+
+
 function App() {
     return (
-        <>
-            <BrowserRouter>
-            <div className="App">
-                <div className="container mt-4" >
+        <BrowserRouter>
+                <div className="container-fluid mt-4" >
                     <div>
-                        <Header />
-                    </div>
-                    <div>
-                        <Content />
+                        <Content/>
                     </div>
                 </div>
-            </div>
-            </BrowserRouter>
-        </>
+        </BrowserRouter>
     );
 }
 
