@@ -1,17 +1,18 @@
 import React, {useCallback} from 'react';
 import {useHistory} from 'react-router-dom'
 
-function PersonalDetail() {
+function Summary() {
     const history = useHistory();
-    const onContinue = useCallback(() => history.push('/propertyDetail'), [history]);
+    const onContinue = useCallback(() => history.push('/personalDetail'), [history]);
     return (
         <>
             <div className="container-fluid">
                 <div className="justify-content-center d-flex">
-                    <h3>"These are personal details."</h3>
+                    <h3>"These are Summary details."</h3>
                 </div>
                 <hr/>
             </div>
+
             <div
                 className="align-items-start d-flex"
                 style={{marginTop: "20%"}}
@@ -30,4 +31,4 @@ function PersonalDetail() {
     )
 }
 
-export default PersonalDetail;
+export default Summary;

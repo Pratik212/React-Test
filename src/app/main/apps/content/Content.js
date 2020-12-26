@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import Sidebar from "../sidebar/Sidebar";
-import Property from "../property/property";
+import Sidebar from "../sidebarDetails/Sidebar";
+import Property from "../propertyDetails/property";
 import Route from "./Route";
 import PersonalDetail from "../personalDetails/PersonalDetail";
 import FinancialDetails from "../financialDetails/FinancialDetails";
 import {Switch} from "react-router-dom";
-import Demographics from "../demographics/Demographics";
+import Demographics from "../demographicsDetails/Demographics";
 import Declaration from "../declaration/Declartion";
-import Summary from "../summary/Summary";
+import Summary from "../summaryDetails/Summary";
 
 function Content() {
     const [sidebar, setSidebar] = useState(true);
@@ -23,7 +23,7 @@ function Content() {
                     <Switch>
                         <Route path="/personalDetail" exact={true} component={PersonalDetail}/>
 
-                        <Route path="/property" exact={true} component={Property}/>
+                        <Route path="/propertyDetail" exact={true} component={Property}/>
 
                         <Route path="/financialDetail" exact={true} component={FinancialDetails}/>
 

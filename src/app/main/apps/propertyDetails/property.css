@@ -4,19 +4,6 @@
     box-sizing: border-box;
 }
 
-.content {
-    text-align: center;
-    justify-content: start;
-    display: flex;
-    padding: 15px;
-    font-size: 20px;
-    font-weight: 600;
-}
-
-.content:hover {
-    background-color: #F7F2F2;
-}
-
 .select-dropdown{
     display: block;
     height: calc(1.5em + .75rem + 2px);
@@ -38,5 +25,11 @@
     border-radius:20px;
     position: fixed;
     bottom: 50px;
-    right: 20%;
+    right: 5%;
+}
+
+h3{
+    margin-top:10px;
+    display:flex;
+    justify-content:center;
 }
