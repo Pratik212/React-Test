@@ -12,8 +12,7 @@ import Summary from "../summary/Summary";
 function Content() {
     const [sidebar, setSidebar] = useState(true);
     const activeStatus = (status) => {
-        setSidebar(status)
-        console.log('status:::', status);
+        setSidebar(status);
     }
 
     return (
