@@ -1,7 +1,9 @@
-import React from 'react';
-import history from "../@history/@history";
+import React, {useCallback} from 'react';
+import {useHistory} from 'react-router-dom'
 
 function Demographics() {
+    const history = useHistory();
+    const onContinue = useCallback(() => history.push('/declaration'), [history]);
     return (
         <>
             <div className="container-fluid">
@@ -17,8 +19,7 @@ function Demographics() {
                         type="submit"
                         className="btn"
                         onClick={() => {
-                            history.push('/declaration')
-                            window.location.reload()
+                            onContinue()
                         }}
                     >
                         Continue

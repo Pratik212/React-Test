@@ -1,40 +1,56 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
+import Select from 'react-select';
 import './property.css'
-import history from "../@history/@history";
-
+import {useHistory} from 'react-router-dom'
 function Property() {
-
+    const history = useHistory();
     const initialValues = {
         propertyValue: "",
         downPayment: "",
         downPaymentPercentage: "",
-        selectPurpose: {
-            1: 1,
-            2: 2,
-            3: 3
-        },
-        selectProperty: {
-            1: 'Single Family House',
-            2: 'Multi Family House',
-            3: 'Condominium'
-        }
     };
+    const selectPurpose = [
+        {value: 'purpose', label: 'Purpose'},
+        {value: 'blue', label: 'Blue'},
+        {value: 'purple', label: 'Purple'},
+        {value: 'red', label: 'Red'},
+        {value: 'orange', label: 'Orange'},
+        {value: 'yellow', label: 'Yellow'},
+        {value: 'green', label: 'Green'},
+        {value: 'forest', label: 'Forest'},
+        {value: 'slate', label: 'Slate'},
+        {value: 'silver', label: 'Silver'},
+    ]
+
+
+    const selectProperty = [
+        {value: 'SingleFamilyHouse', label: 'Single Family House'},
+        {value: 'MultiFamilyHouse', label: 'Multi Family House'},
+        {value: 'Condominium', label: 'Condominium'}
+    ]
+
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const submitForm = () => {
+    useEffect(() => {
+        if (Object.keys(formErrors).length === 0 && isSubmitting) {
+            submitForm();
+        }
+    }, [formErrors]);
 
-            history.push('/financialDetail')
-            window.location.reload()
-
-    };
+    const submitForm = useCallback(() => history.push('/financialDetail'), [history]);
 
     const handleChange = (e) => {
-        console.log("value of element:===", e.target.value);
         const {name, value} = e.target;
         setFormValues({...formValues, [name]: value});
     };
+
+    const handleSelectChange = (e, name) => {
+        const {value} = e;
+        setFormValues({...formValues, [name]: value});
+    };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -64,22 +80,15 @@ function Property() {
         return errors;
     };
 
-    useEffect(() => {
-        if (Object.keys(formErrors).length === 0 && isSubmitting) {
-            submitForm();
-        }
-    }, [formErrors]);
-
-
-
     return (
         <>
-            <div className="bg-light justify-content-end col-md-10" style={{height:'87vh'}}>
+            <div className="col-md-12 bg-white" style={{height: '87vh'}}>
                 <h3>"These are Property details."</h3>
                 <hr/>
+
                 <form onSubmit={handleSubmit} noValidate>
                     <div className="row">
-                        <div className="col-md-4 mt-4 mb-4">
+                        <div className="col-md-4 mt-4 mb-2">
                             <input
                                 type="number"
                                 className="form-control"
@@ -94,7 +103,7 @@ function Property() {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-md-4  mb-2 mt-2">
                             <input
                                 type="number"
                                 className="form-control"
@@ -107,7 +116,7 @@ function Property() {
                                 <span className="error text-danger">{formErrors.downPayment}</span>
                             )}
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-4 mb-2 mt-2">
 
                             <input
                                 type="number"
@@ -121,48 +130,45 @@ function Property() {
 
                             />
 
-
                             {formErrors.downPaymentPercentage && (
                                 <span className="error text-danger">{formErrors.downPaymentPercentage}</span>
                             )}
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-4 mt-4 mb-4">
-                            <div className="dropdown d-flex align-items-start">
-                                <select className="w-100 select-dropdown" name="selectPurpose"
-                                        onChange={handleChange} value={formValues.selectPurpose}>
-                                    <option name="selectPurpose" value="N/A">Purpose</option>
-                                    <option name="selectPurpose" value={formValues.selectPurpose["1"]}>1
-                                    </option>
-                                    <option name="selectPurpose" value={formValues.selectPurpose["2"]}>2
-                                    </option>
-                                    <option name="selectPurpose" value={formValues.selectPurpose["3"]}>3
-                                    </option>
-                                </select>
-                            </div>
+
+                        <div className="col-md-4 mt-2 mb-2">
+                            <Select
+                                className="basic-single"
+                                classNamePrefix="select"
+                                defaultValue={selectPurpose[0]}
+                                isDisabled={false}
+                                isLoading={false}
+                                isClearable={false}
+                                isRtl={false}
+                                isSearchable={true}
+                                name="selectPurpose"
+                                options={selectPurpose}
+                                onChange={(e) => handleSelectChange(e, 'selectPurpose')}
+                            />
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-4">
-                            <div className="dropdown d-flex align-items-start">
-                                <select name="selectProperty" onChange={handleChange}
-                                        value={formValues.selectProperty}
-                                        className="w-100 select-dropdown">
-                                    <option name="selectProperty" value="N/A">Type of Property</option>
-                                    <option name="selectProperty"
-                                            value={formValues.selectProperty["Single Family House"]}>Single
-                                        Family House
-                                    </option>
-                                    <option name="selectProperty"
-                                            value={formValues.selectProperty["Multi Family House"]}>Multi
-                                        Family House
-                                    </option>
-                                    <option name="selectProperty"
-                                            value={formValues.selectProperty["Condominium"]}>Condominium
-                                    </option>
-                                </select>
-                            </div>
+                        <div className="col-md-4 mt-2">
+                            <Select
+                                className="basic-single"
+                                classNamePrefix="select"
+                                defaultValue={selectProperty[0]}
+                                isDisabled={false}
+                                isLoading={false}
+                                isClearable={false}
+                                isRtl={false}
+                                isSearchable={true}
+                                name="selectPurpose"
+                                options={selectProperty}
+                                onChange={(e) => handleSelectChange(e, 'selectProperty')}
+                            />
+
                         </div>
                     </div>
                     <div
