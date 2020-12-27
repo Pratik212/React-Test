@@ -5,13 +5,7 @@ import {useHistory} from 'react-router-dom'
 
 function Property() {
     const history = useHistory();
-    // const initialValues = {
-    //     propertyValue: "",
-    //     downPayment: "",
-    //     downPaymentPercentage: "",
-    //     selectPurpose: "",
-    //     selectProperty: "",
-    // };
+
     const selectPurpose = [
         {value: 0, label: '1'},
         {value: 1, label: '2'},
