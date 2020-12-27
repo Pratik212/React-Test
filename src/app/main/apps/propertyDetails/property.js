@@ -18,13 +18,14 @@ function Property() {
         {value: 2, label: '3'},
     ]
     const cachedHits = localStorage.getItem('propertyValue');
+
     const [initialValues, setInitialValues] = React.useState(
         JSON.parse(cachedHits) || {
-            propertyValue: null,
-            downPayment: null,
-            downPaymentPercentage: null,
-            selectPurpose: null,
-            selectProperty: null,
+             propertyValue: "",
+            downPayment: "",
+            downPaymentPercentage: "",
+            selectPurpose: "",
+            selectProperty: "",
         }
     );
     const selectProperty = [
@@ -45,6 +46,7 @@ function Property() {
     }, [formErrors]);
 
     const submitForm = useCallback(() => {
+        console.log("data",formValues.propertyValue* formValues.downPaymentPercentage / 100);
         history.push('/financialDetail')
     }, [history]);
 
@@ -72,15 +74,11 @@ function Property() {
         } else if (Number(values.propertyValue) >= 10000000000) {
             errors.propertyValue = "property Value must be $10000000000";
         }
-        if (!values.downPayment) {
-            errors.downPayment = "DownPayment field is required!";
-        } else if (Number(values.downPayment) >Number(values.propertyValue)) {
+     else if (Number(values.downPayment) >Number(values.propertyValue)) {
             errors.downPayment = "The downPayment should be less than the property!";
         }
 
-        if (!values.downPaymentPercentage) {
-            errors.downPaymentPercentage = "Percentage field is required!";
-        } else if (Number(values.downPaymentPercentage) > 100) {
+       if (Number(values.downPaymentPercentage) > 100) {
             errors.downPaymentPercentage = "The value of Percentage should be 100 or less";
         }
         return errors;
@@ -94,7 +92,10 @@ function Property() {
                         <div className="col-md-4 mt-4 mb-2">
                             <input
                                 type="number"
-                                className="form-control"
+                                className={`form-control ${
+                                  formValues.propertyValue ? "" : "is-invalid"
+                                }`}
+                                // className="form-control"
                                 placeholder="Property Value"
                                 name="propertyValue"
                                 value={formValues.propertyValue}
@@ -109,10 +110,13 @@ function Property() {
                         <div className="col-md-4  mb-2 mt-2">
                             <input
                                 type="number"
-                                className="form-control"
+                                className={`form-control ${
+                                    formValues.downPayment ? "" : "is-invalid"
+                                }`}
+                                // className="form-control"
                                 placeholder="DownPayment-$"
                                 name="downPayment"
-                                value={formValues.downPayment}
+                                value={formValues.propertyValue * formValues.downPaymentPercentage / 100 || formValues.downPayment}
                                 onChange={handleChange}
                             />
                             {formErrors.downPayment && (
@@ -123,11 +127,14 @@ function Property() {
 
                             <input
                                 type="number"
-                                className="form-control"
+                                className={`form-control ${
+                                    formValues.downPaymentPercentage ? "" : "is-invalid"
+                                }`}
+                                // className="form-control"
                                 placeholder="DownPayment-%"
                                 name="downPaymentPercentage"
                                 onChange={handleChange}
-                                value={formValues.downPaymentPercentage}
+                                value={formValues.downPayment * 100 / formValues.propertyValue || formValues.downPaymentPercentage }
                                 max="100" accuracy="2" min="0"
                                 style={{textAlign: 'left'}}
 
