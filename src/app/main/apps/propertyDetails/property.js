@@ -78,6 +78,12 @@ const Property = () => {
         localStorage.setItem('propertyDetails', JSON.stringify(formValues));
     }, [formValues]);
 
+    const handleSelectChange = (e, name) => {
+        localStorage.setItem('propertyValue', JSON.stringify(formValues));
+        const {value} = e;
+        setFormValues({...formValues, [name]: value});
+    };
+
     const handleInputChange = (e) => {
         const {value, name } = e.target;
         const { values } = formRef.current;
@@ -188,11 +194,12 @@ const Property = () => {
                                         isClearable={false}
                                         isRtl={false}
                                         isSearchable={true}
-                                        value={values.selectPurpose}
+                                        // value={values.selectPurpose}
                                         name="selectPurpose"
                                         options={selectPurpose}
                                         onChange={selectedOption => {
                                             let event = { target : { name:'selectPurpose',value: selectedOption}}
+                                            handleSelectChange(selectedOption, 'selectPurpose')
                                             handleChange(event)
                                         }}
                                     />
@@ -208,13 +215,14 @@ const Property = () => {
                                         isLoading={false}
                                         isClearable={false}
                                         isRtl={false}
-                                        value={values.selectProperty}
+                                        // value={values.selectProperty}
                                         isSearchable={true}
                                         name="selectPurpose"
                                         options={selectProperty}
                                         onChange={selectedOption => {
                                             let event = { target : { name:'selectProperty',value: selectedOption}}
                                             handleChange(event)
+                                            handleSelectChange(selectedOption, 'selectProperty')
                                         }}
                                     />
 
