@@ -1,200 +1,243 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Select from 'react-select';
 import './property.css'
 import {useHistory} from 'react-router-dom'
+import {Formik} from "formik";
 
-function Property() {
+
+// eslint-disable-next-line react-hooks/rules-of-hooks
+
+
+const Property = () => {
     const history = useHistory();
-    // const initialValues = {
-    //     propertyValue: "",
-    //     downPayment: "",
-    //     downPaymentPercentage: "",
-    //     selectPurpose: "",
-    //     selectProperty: "",
-    // };
-    const selectPurpose = [
-        {value: 0, label: '1'},
-        {value: 1, label: '2'},
-        {value: 2, label: '3'},
-    ]
-    const cachedHits = localStorage.getItem('propertyValue');
 
-    const [initialValues, setInitialValues] = React.useState(
-        JSON.parse(cachedHits) || {
-             propertyValue: "",
-            downPayment: "",
-            downPaymentPercentage: "",
-            selectPurpose: "",
-            selectProperty: "",
+    const cachedHits = localStorage.getItem('propertyDetails');
+
+    const [initialValues, setInitialValues] = useState(
+        JSON.parse(cachedHits || '""') ||{
+            propertyValue: null,
+            downPayment: null,
+            downPaymentPercentage: null,
+            selectPurpose: {
+                "value": 0,
+                "label": "1"
+            },
+            selectProperty: {
+                "value": 0,
+                "label": "Single Family House"
+            },
         }
     );
-    const selectProperty = [
-        {value: 0, label: 'Single Family House'},
-        {value: 1, label: 'Multi Family House'},
-        {value: 2, label: 'Condominium'}
-    ]
 
+    const formRef = useRef();
     const [formValues, setFormValues] = useState(initialValues);
-    const [formErrors, setFormErrors] = useState({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    useEffect(() => {
-        if (Object.keys(formErrors).length === 0 && isSubmitting) {
-            localStorage.setItem('propertyValue', JSON.stringify(formValues));
-            submitForm();
-        }
-    }, [formErrors]);
-
-    const submitForm = useCallback(() => {
-        console.log("data",formValues.propertyValue* formValues.downPaymentPercentage / 100);
-        history.push('/financialDetail')
-    }, [history]);
-
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormValues({...formValues, [name]: value});
-    };
-
-    const handleSelectChange = (e, name) => {
-        const {value} = e;
-        setFormValues({...formValues, [name]: value});
-    };
-
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setFormErrors(validate(formValues));
-        setIsSubmitting(true);
-    };
 
     const validate = (values) => {
         let errors = {};
         if (!values.propertyValue) {
             errors.propertyValue = "Property field is required!";
         } else if (Number(values.propertyValue) >= 10000000000) {
-            errors.propertyValue = "property Value must be $10000000000";
+            errors.propertyValue = "Property value must be $10000000000";
         }
-     else if (Number(values.downPayment) >Number(values.propertyValue)) {
+
+        if (!values.downPayment) {
+            errors.downPayment = "DownPayment field is required!";
+        } else if (Number(values.downPayment) > Number(values.propertyValue)) {
             errors.downPayment = "The downPayment should be less than the property!";
         }
 
-       if (Number(values.downPaymentPercentage) > 100) {
+        if (!values.downPaymentPercentage) {
+            errors.downPaymentPercentage = "Percentage field is required!";
+        } else if (values.downPaymentPercentage > 100) {
             errors.downPaymentPercentage = "The value of Percentage should be 100 or less";
         }
         return errors;
     };
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
+    const submitForm = useCallback((value) => {
+        console.log(value);
+        history.push('/financialDetail')
+    }, [history]);
+
+    const selectPurpose = [
+        {value: 0, label: '1'},
+        {value: 1, label: '2'},
+        {value: 2, label: '3'},
+    ]
+
+    const selectProperty = [
+        {value: 0, label: 'Single Family House'},
+        {value: 1, label: 'Multi Family House'},
+        {value: 2, label: 'Condominium'}
+    ]
+
+
+
+    useEffect(() => {
+        localStorage.setItem('propertyDetails', JSON.stringify(formValues));
+    }, [formValues]);
+
+    const handleInputChange = (e) => {
+        const {value, name } = e.target;
+        const { values } = formRef.current;
+        formRef.current.handleChange(e);
+        switch (name) {
+            case 'downPaymentPercentage' :
+                const newAmount = value / 100 * values.propertyValue // Assuming fullPrice set in state
+                setFormValues({...formValues, [name]: value, downPayment: newAmount})
+                formRef.current.setFieldValue('downPayment', newAmount);
+                break
+            case 'downPayment' :
+                const newPercent = (value * 100) / values.propertyValue
+                setFormValues({...formValues, [name]: value, downPaymentPercentage: newPercent})
+                formRef.current.setFieldValue('downPaymentPercentage', newPercent);
+                break
+            default:
+                setFormValues({...formValues, [name]: value});
+                break
+        }
+
+    };
+
     return (
-        <>
-            <div className="col-md-12 bg-white" style={{height: '87vh'}}>
-                <form onSubmit={handleSubmit} noValidate>
-                    <div className="row">
-                        <div className="col-md-4 mt-4 mb-2">
-                            <input
-                                type="number"
-                                className={`form-control ${
-                                  formValues.propertyValue ? "" : "is-invalid"
-                                }`}
-                                // className="form-control"
-                                placeholder="Property Value"
-                                name="propertyValue"
-                                value={formValues.propertyValue}
-                                onChange={handleChange}
-                            />
-                            {formErrors.propertyValue && (
-                                <span className="error text-danger">{formErrors.propertyValue}</span>
-                            )}
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-4  mb-2 mt-2">
-                            <input
-                                type="number"
-                                className={`form-control ${
-                                    formValues.downPayment ? "" : "is-invalid"
-                                }`}
-                                // className="form-control"
-                                placeholder="DownPayment-$"
-                                name="downPayment"
-                                value={formValues.propertyValue * formValues.downPaymentPercentage / 100 || formValues.downPayment}
-                                onChange={handleChange}
-                            />
-                            {formErrors.downPayment && (
-                                <span className="error text-danger">{formErrors.downPayment}</span>
-                            )}
-                        </div>
-                        <div className="col-md-4 mb-2 mt-2">
 
-                            <input
-                                type="number"
-                                className={`form-control ${
-                                    formValues.downPaymentPercentage ? "" : "is-invalid"
-                                }`}
-                                // className="form-control"
-                                placeholder="DownPayment-%"
-                                name="downPaymentPercentage"
-                                onChange={handleChange}
-                                value={formValues.downPayment * 100 / formValues.propertyValue || formValues.downPaymentPercentage }
-                                max="100" accuracy="2" min="0"
-                                style={{textAlign: 'left'}}
+        <Formik
+            initialValues={formValues}
+            validate={validate}
+            onSubmit={submitForm}
+            innerRef={formRef}
+            validateOnChange={true}
 
-                            />
+        >
 
-                            {formErrors.downPaymentPercentage && (
-                                <span className="error text-danger">{formErrors.downPaymentPercentage}</span>
-                            )}
-                        </div>
-                    </div>
-                    <div className="row">
 
-                        <div className="col-md-4 mt-2 mb-2">
-                            <Select
-                                className="basic-single"
-                                classNamePrefix="select"
-                                defaultValue={formValues.selectPurpose ? selectPurpose[formValues.selectPurpose] : selectPurpose[0]}
-                                isDisabled={false}
-                                isLoading={false}
-                                isClearable={false}
-                                isRtl={false}
-                                isSearchable={true}
-                                name="selectPurpose"
-                                options={selectPurpose}
-                                onChange={(e) => handleSelectChange(e, 'selectPurpose')}
-                            />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-4 mt-2">
-                            <Select
-                                className="basic-single"
-                                classNamePrefix="select"
-                                defaultValue={formValues.selectProperty ? selectProperty[formValues.selectProperty] : selectProperty[0]}
-                                isDisabled={false}
-                                isLoading={false}
-                                isClearable={false}
-                                isRtl={false}
-                                isSearchable={true}
-                                name="selectPurpose"
-                                options={selectProperty}
-                                onChange={(e) => handleSelectChange(e, 'selectProperty')}
-                            />
+            {(formik) => {
+                const {
+                    values,
+                    handleChange,
+                     handleSubmit,
+                    errors,
+                    touched,
+                    handleBlur,
+                } = formik;
 
-                        </div>
+                return (
+
+                    <div className="col-md-12 bg-white" style={{height: '87vh'}}>
+                        <form onSubmit={handleSubmit}>
+                            <div className="row">
+                                <div className="col-md-4 mt-4 mb-2">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        placeholder="Property Value"
+                                        name="propertyValue"
+                                        value={values.propertyValue}
+                                        onChange={handleInputChange}
+                                        onBlur={handleBlur}
+                                    />
+
+                                    {errors.propertyValue && touched.propertyValue && (
+                                        <span className="error text-danger">{errors.propertyValue}</span>
+                                    )}
+
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-4  mb-2 mt-2">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        placeholder="DownPayment-$"
+                                        name="downPayment"
+                                        value={values.downPayment}
+                                        onChange={handleInputChange}
+                                        onBlur={handleBlur}
+                                    />
+                                    {errors.downPayment && touched.downPayment && (
+                                        <span className="error text-danger">{errors.downPayment}</span>
+                                    )}
+                                </div>
+                                <div className="col-md-4 mb-2 mt-2">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        placeholder="DownPayment-%"
+                                        name="downPaymentPercentage"
+                                        onChange={handleInputChange}
+                                        value={values.downPaymentPercentage}
+                                        style={{textAlign: 'left'}}
+                                        onBlur={handleBlur}
+                                    />
+                                    {errors.downPaymentPercentage && touched.downPaymentPercentage && (
+                                        <span className="error text-danger">{errors.downPaymentPercentage}</span>
+                                    )}
+
+                                </div>
+                            </div>
+                            <div className="row">
+
+                                <div className="col-md-4 mt-2 mb-2">
+                                    <Select
+                                        className="basic-single"
+                                        classNamePrefix="select"
+                                        defaultValue={values.selectPurpose ? selectPurpose[values.selectPurpose] : selectPurpose[0]}
+                                        isDisabled={false}
+                                        isLoading={false}
+                                        isClearable={false}
+                                        isRtl={false}
+                                        isSearchable={true}
+                                        value={values.selectPurpose}
+                                        name="selectPurpose"
+                                        options={selectPurpose}
+                                        onChange={selectedOption => {
+                                            let event = { target : { name:'selectPurpose',value: selectedOption}}
+                                            handleChange(event)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-4 mt-2">
+                                    <Select
+                                        className="basic-single"
+                                        classNamePrefix="select"
+                                        defaultValue={values.selectProperty ? selectProperty[values.selectProperty] : selectProperty[0]}
+                                        isDisabled={false}
+                                        isLoading={false}
+                                        isClearable={false}
+                                        isRtl={false}
+                                        value={values.selectProperty}
+                                        isSearchable={true}
+                                        name="selectPurpose"
+                                        options={selectProperty}
+                                        onChange={selectedOption => {
+                                            let event = { target : { name:'selectProperty',value: selectedOption}}
+                                            handleChange(event)
+                                        }}
+                                    />
+
+                                </div>
+                            </div>
+                            {/*<pre>{JSON.stringify(values, null, ' ')}</pre>*/}
+                            {/*<pre>{JSON.stringify(formValues, null, ' ')}</pre>*/}
+                            <div
+                                className="align-items-start d-flex"
+                                style={{marginTop: "20%"}}
+                            >
+                                <button
+                                    type="submit"
+                                    className="btn"
+                                >
+                                    Continue
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div
-                        className="align-items-start d-flex"
-                        style={{marginTop: "20%"}}
-                    >
-                        <button
-                            type="submit"
-                            className="btn"
-                        >
-                            Continue
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </>
+                );
+            }}
+        </Formik>
     )
 }
 
