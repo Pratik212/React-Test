@@ -33,3 +33,17 @@ h3{
     display:flex;
     justify-content:center;
 }
+
+
+span{
+    position: absolute;
+    margin-right: -15px;
+    margin-left:4px;
+    margin-top: 7px;
+}
+
+.percent{
+    position: absolute;
+    margin-left:70%;
+    margin-top: 7px;
+}

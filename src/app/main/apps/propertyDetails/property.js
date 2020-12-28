@@ -7,7 +7,6 @@ import {Formik} from "formik";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
-
 const Property = () => {
     const history = useHistory();
 
@@ -145,14 +144,14 @@ const Property = () => {
                                     />
 
                                     {errors.propertyValue && touched.propertyValue && (
-                                        <span className="error text-danger">{errors.propertyValue}</span>
+                                        <span className="error  text-danger">{errors.propertyValue}</span>
                                     )}
 
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-md-4  mb-2 mt-2">
-                                    <input
+                                <div className="col-md-4  mb-2 mt-4">
+                                    <span>$</span> <input
                                         type="number"
                                         className="form-control"
                                         placeholder="DownPayment-$"
@@ -165,11 +164,12 @@ const Property = () => {
                                         <span className="error text-danger">{errors.downPayment}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4 mb-2 mt-2">
+                                <div className="col-md-4 mb-2 mt-4">
+                                    <span className="percent">%</span>
                                     <input
                                         type="number"
                                         className="form-control"
-                                        placeholder="DownPayment-%"
+                                        placeholder="DownPayment - "
                                         name="downPaymentPercentage"
                                         onChange={handleInputChange}
                                         value={values.downPaymentPercentage}
@@ -184,7 +184,7 @@ const Property = () => {
                             </div>
                             <div className="row">
 
-                                <div className="col-md-4 mt-2 mb-2">
+                                <div className="col-md-4 mt-4 mb-2">
                                     <Select
                                         className="basic-single"
                                         classNamePrefix="select"
@@ -206,7 +206,7 @@ const Property = () => {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-md-4 mt-2">
+                                <div className="col-md-4 mt-4">
                                     <Select
                                         className="basic-single"
                                         classNamePrefix="select"
