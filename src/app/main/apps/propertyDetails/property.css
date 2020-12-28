@@ -40,10 +40,12 @@ span{
     margin-right: -15px;
     margin-left:4px;
     margin-top: 7px;
+    font-weight:500;
 }
 
 .percent{
     position: absolute;
     margin-left:70%;
     margin-top: 7px;
+    font-weight:500;
 }

@@ -78,7 +78,6 @@ const Property = () => {
     }, [formValues]);
 
     const handleSelectChange = (e, name) => {
-        localStorage.setItem('propertyValue', JSON.stringify(formValues));
         const {value} = e;
         setFormValues({...formValues, [name]: value});
     };
@@ -154,7 +153,7 @@ const Property = () => {
                                     <span>$</span> <input
                                         type="number"
                                         className="form-control"
-                                        placeholder="DownPayment-$"
+                                        placeholder="DownPayment"
                                         name="downPayment"
                                         value={values.downPayment}
                                         onChange={handleInputChange}
